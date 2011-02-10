@@ -1,3 +1,6 @@
 [submodule "Resources/javascript/include/joli.js"]
 	path = Resources/javascript/include/joli.js
 	url = git://github.com/xavierlacot/joli.js.git
+[submodule "Resources/javascript/include/redux"]
+	path = Resources/javascript/include/redux
+	url = https://github.com/dawsontoth/Appcelerator-Titanium-Redux.git
