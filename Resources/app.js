@@ -1,63 +1,61 @@
-// this sets the background color of the master UIView (when there are no windows/tab groups on it)
-Titanium.UI.setBackgroundColor('#000');
+Ti.include('js/lib/vendor/redux/redux.js');
+includeGlobal('js/lib/vendor/joli.js/joli.js');
+
+
 
 // create tab group
 var tabGroup = Titanium.UI.createTabGroup();
 
-
-//
-// create base UI tab and root window
-//
-var win1 = Titanium.UI.createWindow({  
-    title:'Tab 1',
-    backgroundColor:'#fff'
+// add windows and tabs
+var win1 = Titanium.UI.createWindow({
+    url:'javascript/views/encode.js',
+    title:'Create a new short url',
+    backgroundImage:'images/background.png'
 });
-var tab1 = Titanium.UI.createTab({  
-    icon:'KS_nav_views.png',
-    title:'Tab 1',
+var tab1 = Titanium.UI.createTab({
+    icon:'images/icons/encode.png',
+    title:'Encode',
     window:win1
 });
 
-var label1 = Titanium.UI.createLabel({
-	color:'#999',
-	text:'I am Window 1',
-	font:{fontSize:20,fontFamily:'Helvetica Neue'},
-	textAlign:'center',
-	width:'auto'
+var win2 = Titanium.UI.createWindow({
+    url:'javascript/views/decode.js',
+    title:'Decode a short url',
+    backgroundImage:'images/background.png'
 });
-
-win1.add(label1);
-
-//
-// create controls tab and root window
-//
-var win2 = Titanium.UI.createWindow({  
-    title:'Tab 2',
-    backgroundColor:'#fff'
-});
-var tab2 = Titanium.UI.createTab({  
-    icon:'KS_nav_ui.png',
-    title:'Tab 2',
+var tab2 = Titanium.UI.createTab({
+    icon:'images/icons/decode.png',
+    title:'Decode',
     window:win2
 });
 
-var label2 = Titanium.UI.createLabel({
-	color:'#999',
-	text:'I am Window 2',
-	font:{fontSize:20,fontFamily:'Helvetica Neue'},
-	textAlign:'center',
-	width:'auto'
+var win3 = Titanium.UI.createWindow({
+    url:'javascript/views/history.js',
+    title:'Short urls history',
+    backgroundColor:'#fff'
+});
+var tab3 = Titanium.UI.createTab({
+    icon:'images/icons/history.png',
+    title:'History',
+    window:win3
 });
 
-win2.add(label2);
+var win4 = Titanium.UI.createWindow({
+    url:'javascript/views/settings.js',
+    title:'Configure',
+    backgroundImage:'images/background.png'
+});
+var tab4 = Titanium.UI.createTab({
+    icon:'images/icons/config.png',
+    title:'Config',
+    window:win4
+});
 
-
-
-//
 //  add tabs
-//
-tabGroup.addTab(tab1);  
-tabGroup.addTab(tab2);  
+tabGroup.addTab(tab1);
+tabGroup.addTab(tab2);
+tabGroup.addTab(tab3);
+tabGroup.addTab(tab4);
 
 
 // open tab group
