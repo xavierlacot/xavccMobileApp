@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ti:app xmlns:ti="http://ti.appcelerator.org">
 <id>com.xavcc.mobile</id>
-<name>xavccMobileApp</name>
-<version>1.0.0</version>
+<name>URL shortener</name>
+<version>1.0.2</version>
 <publisher>xav.cc</publisher>
 <url>http://xav.cc/</url>
 <description>a mobile client for the url shortener xav.cc</description>
 <copyright>2011 by xav.cc</copyright>
-<icon>default_app_logo.png</icon>
+<icon>images/appicon.png</icon>
     <persistent-wifi>false</persistent-wifi>
     <prerendered-icon>false</prerendered-icon>
     <statusbar-style>default</statusbar-style>
-    <statusbar-hidden>false</statusbar-hidden>
+    <statusbar-hidden>true</statusbar-hidden>
     <fullscreen>false</fullscreen>
     <navbar-hidden>false</navbar-hidden>
     <analytics>true</analytics>
@@ -29,6 +29,7 @@
 	</iphone>
 	<android xmlns:android="http://schemas.android.com/apk/res/android">
 	</android>
-	<modules>
-	</modules>
+  <modules>
+    <module version="0.2">com.xavcc.Clipboard</module>
+  </modules>
 </ti:app>
