@@ -3,4 +3,4 @@
 	url = git://github.com/xavierlacot/joli.js.git
 [submodule "Resources/js/lib/vendor/redux"]
 	path = Resources/js/lib/vendor/redux
-	url = https://github.com/dawsontoth/Appcelerator-Titanium-Redux.git
+	url = git@github.com:xavierlacot/Appcelerator-Titanium-Redux.git
