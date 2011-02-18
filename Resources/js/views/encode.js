@@ -1,6 +1,5 @@
 Ti.include('../../redux.js');
 var win = Titanium.UI.currentWindow;
-var clipboard = require('com.xavcc.Clipboard');
 
 if (Titanium.Platform.name != 'android') {
   win.hideNavBar(); // full screen app
@@ -29,14 +28,10 @@ var tf1 = Titanium.UI.createTextField({
 	returnKeyType:Titanium.UI.RETURNKEY_DEFAULT,
 	borderStyle:Titanium.UI.INPUT_BORDERSTYLE_ROUNDED
 });
-if (Titanium.App.Properties.getBool('auto_paste', false)) {
-  // put the shortened url in the clipboard
-  var text = clipboard.getText();
-
-  if (text) {
-    if (text.indexOf('http') == 0) {
-      tf1.value = text;
-    }
+if (Titanium.UI.Clipboard.hasText() && Titanium.App.Properties.getBool('auto_paste', false)) {
+  var text = Titanium.UI.Clipboard.getText();
+  if (text.indexOf('http') == 0) {
+    tf1.value = text;
   }
 }
 
@@ -126,7 +121,14 @@ Ti.App.addEventListener('xavcc.encode.result', function(event) {
 
     if (Titanium.App.Properties.getBool('auto_copy', true)) {
       // put the shortened url in the clipboard
-      clipboard.setText(url);
+      alert(Titanium.App.Properties.getBool('auto_copy', true));
+      Titanium.UI.Clipboard.setText(url);
+    }
+
+    if (Titanium.App.Properties.getBool('use_history', true) && !xavcc.url.has(url)) {
+      // save in the local database
+      var longurl = xavcc.trim(tf1.value);
+      xavcc.url.save(longurl, url);
     }
   } else {
     // something went wrong : display an alert message

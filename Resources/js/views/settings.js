@@ -81,7 +81,6 @@ row5.add(l5);
 row5.add(b5);
 
 
-
 // table view
 var tableViewOptions1 = {
 	data: [row1,row2,row3,row4,row5],
@@ -93,10 +92,7 @@ var tableViewOptions1 = {
 };
 var tableView1 = Titanium.UI.createTableView(tableViewOptions1);
 tableView1.addEventListener('click', function(e) {});
-
-
 win.add(tableView1);
-
 
 
 // url shortener picker
@@ -126,7 +122,7 @@ picker.selectionIndicator = true;
 var shorteners = [
   Titanium.UI.createPickerRow({title: 'xav.cc'}),
   Titanium.UI.createPickerRow({title: 'xa.vc'})
-]
+];
 picker.add(shorteners);
 picker_view.add(toolbar);
 picker_view.add(picker);

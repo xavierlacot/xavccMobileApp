@@ -1,6 +1,24 @@
 // open database
 joli.connection = new joli.Connection('xavcc');
 
+var getMaxPosition = function() {
+  var q = new joli.query()
+    .select('max(shorturl.position) as max')
+    .from('shorturl');
+  var result = q.execute();
+
+  if (!result.length) {
+    return 0;
+  } else {
+    if (null == result[0].max) {
+      return 0;
+    }
+
+    return parseInt(result[0].max);
+  }
+}
+
+// define the models
 var models = (function() {
   var m = {};
 
@@ -9,11 +27,17 @@ var models = (function() {
     table:    'shorturl',
     columns:  {
       id:               'INTEGER',
-      shorturl:         'TEXT',
+      created_at:       'TEXT',
       longurl:          'TEXT',
-      viewcount:        'INTEGER',
+      media:            'TEXT',
+      position:         'INTEGER',
+      shorturl:         'TEXT',
       title:            'TEXT',
-      position:         'INTEGER'
+      updated_at:       'TEXT',
+      viewcount:        'INTEGER'
+    },
+    methods:  {
+      getMaxPosition:   getMaxPosition
     }
   });
 

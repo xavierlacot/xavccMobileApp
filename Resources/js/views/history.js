@@ -6,27 +6,42 @@ win.addEventListener('focus',function(e) {
     order: ['position asc']
   });
   var data = [];
+  var title_text;
+  var details_text;
   var i = 0;
 
   while (i < shorturls.length) {
-    var row = Ti.UI.createTableViewRow({hasChild: true});
+    xavcc.url.details(shorturls[i].shorturl);
+    var row = Ti.UI.createTableViewRow({
+      hasChild: true,
+      height: 50
+    });
+
+    if (shorturls[i].title != '') {
+      title_text = shorturls[i].title;
+      details_text = shorturls[i].longurl;
+    } else {
+      title_text = shorturls[i].longurl;
+      details_text = shorturls[i].shorturl;
+    }
+
     var title = Titanium.UI.createLabel({
-      text: shorturls[i].longurl,
-      font: {fontSize:18},
+      text: title_text,
+      font: {fontSize:15},
       width: 'auto',
       textAlign: 'left',
-      top: 2,
-      left: 2,
+      top: 5,
+      left: 80,
       height: 18
     });
     row.add(title);
     var urllabel = Titanium.UI.createLabel({
-      text: shorturls[i].shorturl,
+      text: details_text,
       font: {fontSize:12},
       width: 'auto',
       textAlign: 'left',
-      top: 24,
-      left: 2,
+      top: 30,
+      left: 80,
       height: 14
     });
     row.add(urllabel);
@@ -34,13 +49,27 @@ win.addEventListener('focus',function(e) {
       text: shorturls[i].position,
       font: {fontSize:20, fontWeight:'bold'},
       width: 'auto',
-      textAlign: 'left',
+      textAlign: 'right',
       top: 20,
       color: 'red',
-      left: 260,
-      height: 14
+      right: 40,
+      height: 20
     });
     row.add(poslabel);
+
+    if (shorturls[i].media) {
+      var image = Titanium.UI.createImageView({
+      	image:shorturls[i].media,
+      	width:66,
+      	height:50,
+      	top:0,
+      	left: 0,
+      	canScale: true,
+      	zIndex:1000
+      });
+      row.add(image);
+    }
+
     row.className = 'shorturl_row';
   	data.push(row);
   	i++;
@@ -69,12 +98,14 @@ win.addEventListener('focus',function(e) {
 
     if (from != to)
     {
-      var db = Titanium.Database.open('urldb');
-
       if (from > to)
       {
         // select rows to reposition
-        var rows = db.execute('SELECT * FROM URL WHERE POS >= ? and POS < ?', to, from);
+        var rows = models.shorturl.all({
+
+        });
+
+          db.execute('SELECT * FROM URL WHERE POS >= ? and POS < ?', to, from);
 
         while (rows.isValidRow()) {
           var new_position = rows.fieldByName('pos') + 1;

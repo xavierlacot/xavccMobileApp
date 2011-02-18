@@ -1,12 +1,9 @@
 Ti.include('../../redux.js');
 var win = Titanium.UI.currentWindow;
-var clipboard = require('com.xavcc.Clipboard');
 
 if (Titanium.Platform.name != 'android') {
   win.hideNavBar(); // full screen app
 }
-
-
 
 // label and first field
 var l1a = Titanium.UI.createLabel({
@@ -89,8 +86,8 @@ Ti.App.addEventListener('xavcc.decode.result', function(event) {
       xavcc.showResponse(l2, url);
 
       if (Titanium.App.Properties.getBool('auto_copy', true)) {
-        // put the shortened url in the clipboard
-        clipboard.setText(url);
+        // put the expanded url in the clipboard
+        Titanium.UI.Clipboard.setText(url);
       }
     } else if (url.length > 0) {
       // something went wrong : display an alert message
