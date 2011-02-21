@@ -14,9 +14,26 @@ var getMaxPosition = function() {
       return 0;
     }
 
-    return parseInt(result[0].max);
+    return parseInt(result[0].max, 10);
   }
-}
+};
+
+var getMaxId = function() {
+  var q = new joli.query()
+    .select('max(shorturl.id) as max')
+    .from('shorturl');
+  var result = q.execute();
+
+  if (!result.length) {
+    return 0;
+  } else {
+    if (null == result[0].max) {
+      return 0;
+    }
+
+    return parseInt(result[0].max, 10);
+  }
+};
 
 // define the models
 var models = (function() {
@@ -28,6 +45,7 @@ var models = (function() {
     columns:  {
       id:               'INTEGER',
       created_at:       'TEXT',
+      description:      'TEXT',
       longurl:          'TEXT',
       media:            'TEXT',
       position:         'INTEGER',
@@ -37,6 +55,7 @@ var models = (function() {
       viewcount:        'INTEGER'
     },
     methods:  {
+      getMaxId:         getMaxId,
       getMaxPosition:   getMaxPosition
     }
   });
