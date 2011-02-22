@@ -84,20 +84,20 @@ var xavcc = (function() {
 
 
   api.parseDate = function(dt) {
-  var hit = dt.match(/^(\d{4})-(\d{2})-(\d{2})\s(\d{2}):(\d{2}):(\d{2})/);
+    var hit = dt.match(/^(\d{4})-(\d{2})-(\d{2})\s(\d{2}):(\d{2}):(\d{2})/);
 
-  if (hit && hit.length === 7) {
-    return new Date(
-       Number(hit[1]),
-       Number(hit[2]) - 1,
-       Number(hit[3]),
-       Number(hit[4]),
-       Number(hit[5]),
-       Number(hit[6]));
-  } else {
-    return false;
+    if (hit && hit.length === 7) {
+      return new Date(
+         Number(hit[1]),
+         Number(hit[2]) - 1,
+         Number(hit[3]),
+         Number(hit[4]),
+         Number(hit[5]),
+         Number(hit[6]));
+    } else {
+      return false;
+    };
   };
-}
 
 
   api.showIndicator = function() {
@@ -172,6 +172,13 @@ var xavcc = (function() {
   };
 
 
+  api.url.clear = function(shorturl) {
+    return new joli.query()
+    .destroy()
+    .from('shorturl')
+    .execute();
+  };
+
   api.url.details = function(shorturl) {
     var model = joli.models.get('shorturl');
     var item = model.findOneBy('shorturl', shorturl);
@@ -181,16 +188,15 @@ var xavcc = (function() {
     }
 
     // compute the difference between item creation and last update date
-    var diff = parseInt(item.updated_at) - parseInt(item.created_at);
+    var diff = parseInt(item.updated_at, 10) - parseInt(item.created_at, 10);
 
     if ((item.title == null) && (item.created_at == null || (diff < 300 * 1000))) {
       // if the title is null, and the item has never been updated or its
-      // update time has been made less than 2 minutes after it was created,
+      // update time has been made less than 5 minutes after it was created,
       // load from REST service
       var alias = shorturl.slice(api.strpos(shorturl, 'c/') + 2);
       var url = Titanium.App.Properties.getString('api_url', 'http://api.xav.cc/');
       url = url + 'sf_short_url?shorturl=' + alias;
-      log('get details using: ' + url);
 
       // create http client
       var client = api.createClient();
@@ -212,10 +218,11 @@ var xavcc = (function() {
             }
 
             var update = {
-              viewcount:  item.viewcount,
-              title:      item.title,
-              created_at: created_at,
-              updated_at: updated_at
+              viewcount:    item.viewcount,
+              title:        item.title,
+              description:  item.description,
+              created_at:   created_at,
+              updated_at:   updated_at
             };
 
             if (item.screencapture) {
@@ -244,24 +251,26 @@ var xavcc = (function() {
   };
 
   api.url.has = function(shorturl) {
-    return new joli.query()
+    var result = new joli.query()
     .count()
     .from('shorturl')
     .where('shorturl.shorturl = ?', shorturl)
     .execute();
+Titanium.API.log('info', 'count returns : ' + result);
+    return (result > 0);
   };
 
   api.url.save = function(longurl, shorturl) {
     var model = joli.models.get('shorturl');
     var item = {
+      id:        (model.getMaxId() + 1),
       longurl:   longurl,
       shorturl:  shorturl,
       position:  (model.getMaxPosition() + 1)
     };
-    log(item);
     model.newRecord(item).save();
+    Ti.App.fireEvent('xavcc.url.saved', {});
   };
-
 
   return api;
 })();
