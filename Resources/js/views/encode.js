@@ -9,7 +9,7 @@ if (Titanium.Platform.name != 'android') {
 // label and first field
 var l1 = Titanium.UI.createLabel({
 	text:'Paste a long url*',
-	width:250,
+	width:260,
 	height:35,
 	top:40,
 	left:30,
@@ -22,11 +22,12 @@ var tf1 = Titanium.UI.createTextField({
 	height:35,
 	top:70,
 	left:30,
-	width:250,
+	width:260,
 	autocapitalization: Titanium.UI.TEXT_AUTOCAPITALIZATION_NONE,
 	keyboardType:Titanium.UI.KEYBOARD_URL,
 	returnKeyType:Titanium.UI.RETURNKEY_DEFAULT,
-	borderStyle:Titanium.UI.INPUT_BORDERSTYLE_ROUNDED
+	borderStyle:Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
+	clearButtonMode:Titanium.UI.INPUT_BUTTONMODE_ONFOCUS
 });
 if (Titanium.UI.Clipboard.hasText() && Titanium.App.Properties.getBool('auto_paste', false)) {
   var text = Titanium.UI.Clipboard.getText();
@@ -38,7 +39,7 @@ if (Titanium.UI.Clipboard.hasText() && Titanium.App.Properties.getBool('auto_pas
 // labels and field for the optionnal alias
 var l2a = Titanium.UI.createLabel({
 	text:'Your own alias',
-	width:250,
+	width:260,
 	height:35,
 	top:120,
 	left:30,
@@ -61,7 +62,7 @@ var tf2 = Titanium.UI.createTextField({
 	height:35,
 	top:150,
 	left:130,
-	width:150,
+	width:160,
 	autocapitalization: Titanium.UI.TEXT_AUTOCAPITALIZATION_NONE,
 	returnKeyType:Titanium.UI.RETURNKEY_DEFAULT,
 	borderStyle:Titanium.UI.INPUT_BORDERSTYLE_ROUNDED
@@ -70,7 +71,7 @@ var tf2 = Titanium.UI.createTextField({
 // second label, for the result
 var l3 = Titanium.UI.createLabel({
 	text:'',
-	width:250,
+	width:260,
 	height:'auto',
 	top:300,
 	color:'#fff',
@@ -82,7 +83,7 @@ var l3 = Titanium.UI.createLabel({
 var b1 = Titanium.UI.createButton({
 	title:'Shorten this url',
 	height:30,
-	width:250,
+	width:260,
 	left:30,
 	top:220
 });
@@ -121,12 +122,17 @@ Ti.App.addEventListener('xavcc.encode.result', function(event) {
 
     if (Titanium.App.Properties.getBool('auto_copy', true)) {
       // put the shortened url in the clipboard
-      alert(Titanium.App.Properties.getBool('auto_copy', true));
       Titanium.UI.Clipboard.setText(url);
     }
-
+if (Titanium.App.Properties.getBool('use_history', true)) {
+  info('using history');
+}
+if (!xavcc.url.has(url)) {
+  info('do not have the url in memory');
+}
     if (Titanium.App.Properties.getBool('use_history', true) && !xavcc.url.has(url)) {
       // save in the local database
+      info('saving url ' + url);
       var longurl = xavcc.trim(tf1.value);
       xavcc.url.save(longurl, url);
     }

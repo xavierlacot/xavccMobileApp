@@ -1,7 +1,104 @@
 Ti.include('../../redux.js');
 var win = Titanium.UI.currentWindow;
 
-win.addEventListener('focus',function(e) {
+// add the tableview
+var tableview = Titanium.UI.createTableView({
+	editable:true, moveable:true
+});
+
+// display short url screen
+tableview.addEventListener('click',function(e) {
+	var win_details = Titanium.UI.createWindow({
+		url: '/js/views/history.details.js',
+		title: 'Short url details',
+		shorturlId: e.row.shorturlId,
+    fullscreen: false,
+    navBarHidden: false,
+    backgroundImage:'../../images/background.png'
+	});
+	Titanium.UI.currentTab.open(win_details, {animated:true});
+});
+
+// add move event listener
+tableview.addEventListener('move', function(e) {
+  var from = e.fromIndex + 1;
+  var to = e.index + 1;
+  var q;
+
+  if (from != to)
+  {
+    if (from > to)
+    {
+      // move rows one position after
+      q = new joli.query()
+        .update('shorturl')
+        .set({'position = position + 1': ''})
+        .where('position >= ?', to)
+        .where('position < ?', from);
+      q.execute();
+    }
+    else
+    {
+      // to > from
+      // move rows one position before
+      q = new joli.query()
+        .update('shorturl')
+        .set({'position = position - 1': ''})
+        .where('position <= ?', to)
+        .where('position > ?', from);
+      q.execute();
+    }
+
+    // move the shorturl to its new position
+    q = new joli.query()
+      .update('shorturl')
+      .set({'position': to})
+      .where('id = ?', e.row.shorturlId);
+    q.execute();
+  }
+});
+
+// add delete event listener
+tableview.addEventListener('delete',function(e) {
+  // delete this row
+  var shorturl = models.shorturl.findOneById(e.row.shorturlId);
+  var q = new joli.query()
+    .destroy()
+    .from('shorturl')
+    .where('id = ?', e.row.shorturlId);
+  q.execute();
+
+  // move rows before
+  q = new joli.query()
+    .update('shorturl')
+    .set({'position = position - 1': ''})
+    .where('position > ?', shorturl.position);
+  q.execute();
+});
+
+win.add(tableview);
+
+if (Titanium.Platform.name != 'android') {
+  //  create edit/cancel buttons for nav bar
+  var edit = Titanium.UI.createButton({
+  	title:'Edit'
+  });
+  var cancel = Titanium.UI.createButton({
+  	title:'Done',
+  	style:Titanium.UI.iPhone.SystemButtonStyle.DONE
+  });
+  edit.addEventListener('click', function() {
+  	win.setRightNavButton(cancel);
+  	tableview.editing = true;
+  });
+  cancel.addEventListener('click', function() {
+  	win.setRightNavButton(edit);
+  	tableview.editing = false;
+  });
+  win.setRightNavButton(edit);
+}
+
+var loadHistory = function() {
   var shorturls = models.shorturl.all({
     order: ['position asc']
   });
@@ -14,7 +111,8 @@ win.addEventListener('focus',function(e) {
     xavcc.url.details(shorturls[i].shorturl);
     var row = Ti.UI.createTableViewRow({
       hasChild: true,
-      height: 50
+      height: 50,
+      shorturlId: shorturls[i].id
     });
 
     if (shorturls[i].title != '') {
@@ -45,8 +143,9 @@ win.addEventListener('focus',function(e) {
       height: 14
     });
     row.add(urllabel);
+/*
     var poslabel = Titanium.UI.createLabel({
-      text: shorturls[i].position,
+      text: shorturls[i].id + ' - ' + shorturls[i].position,
       font: {fontSize:20, fontWeight:'bold'},
       width: 'auto',
       textAlign: 'right',
@@ -56,7 +155,7 @@ win.addEventListener('focus',function(e) {
       height: 20
     });
     row.add(poslabel);
-
+*/
     if (shorturls[i].media) {
       var image = Titanium.UI.createImageView({
       	image:shorturls[i].media,
@@ -75,129 +174,14 @@ win.addEventListener('focus',function(e) {
   	i++;
   }
 
-  // add the tableview
-  var tableview = Titanium.UI.createTableView({
-  	data: data, editable:true, moveable:true
-  });
+  tableview.data = data;
+};
 
-  // display short url screen
-  tableview.addEventListener('click',function(e) {
-		var win_details = Titanium.UI.createWindow({
-			url: 'details.js',
-			title: 'Short url details'
-		});
-		win_details.longurl = e.row.children[0].text;
-		win_details.shorturl = e.row.children[1].text;
-		Titanium.UI.currentTab.open(win_details, {animated:true});
-  });
+win.addEventListener('focus',function(e) {
+  loadHistory();
+});
 
-  // add move event listener
-  tableview.addEventListener('move',function(e) {
-    var from = e.fromIndex + 1;
-    var to = e.index + 1;
-
-    if (from != to)
-    {
-      if (from > to)
-      {
-        // select rows to reposition
-        var rows = models.shorturl.all({
-
-        });
-
-          db.execute('SELECT * FROM URL WHERE POS >= ? and POS < ?', to, from);
-
-        while (rows.isValidRow()) {
-          var new_position = rows.fieldByName('pos') + 1;
-          db.execute(
-            'UPDATE URL SET POS = ? WHERE URL = ? AND SHURL = ?',
-            new_position,
-            rows.fieldByName('url'),
-            rows.fieldByName('shurl')
-          );
-        	rows.next();
-        }
-      }
-      else
-      {
-        // to > from
-        // select rows to reposition
-        var rows = db.execute('SELECT * FROM URL WHERE POS <= ? and POS > ?', to, from);
-
-        while (rows.isValidRow()) {
-          var new_position = rows.fieldByName('pos') - 1;
-          db.execute(
-            'UPDATE URL SET POS = ? WHERE URL = ? AND SHURL = ?',
-            new_position,
-            rows.fieldByName('url'),
-            rows.fieldByName('shurl')
-          );
-        	rows.next();
-        }
-      }
-
-      rows.close();
-      db.execute(
-        'UPDATE URL SET POS = ? WHERE URL = ? AND SHURL = ?',
-        to,
-        e.row.children[0].text,
-        e.row.children[1].text
-      );
-      db.close();
-    }
-  });
-
-  // add delete event listener
-  tableview.addEventListener('delete',function(e) {
-    var db = Titanium.Database.open('urldb');
-    db.execute(
-      'DELETE FROM URL WHERE URL = ? AND SHURL = ?',
-      e.row.children[0].text,
-      e.row.children[1].text
-    );
-
-    var rows = db.execute('SELECT * FROM URL ORDER BY POS ASC');
-    var position = 1;
-
-    while (rows.isValidRow()) {
-      db.execute(
-        'UPDATE URL SET POS = ? WHERE URL = ? AND SHURL = ?',
-        position,
-        rows.fieldByName('url'),
-        rows.fieldByName('shurl')
-      );
-      position++;
-    	rows.next();
-    }
-
-    rows.close();
-    db.close();
-  });
-
-  win.add(tableview);
-
-  //
-  //  create edit/cancel buttons for nav bar
-  //
-  var edit = Titanium.UI.createButton({
-  	title:'Edit'
-  });
-
-  edit.addEventListener('click', function()
-  {
-  	win.setRightNavButton(cancel);
-  	tableview.editing = true;
-  });
-
-  var cancel = Titanium.UI.createButton({
-  	title:'Done',
-  	style:Titanium.UI.iPhone.SystemButtonStyle.DONE
-  });
-  cancel.addEventListener('click', function()
-  {
-  	win.setRightNavButton(edit);
-  	tableview.editing = false;
-  });
-
-  win.setRightNavButton(edit);
+Ti.App.addEventListener('xavcc.url.saved',function(e) {
+  // update when new url is saved (for android, which doesn't fire focus event each time the win is focused)
+  loadHistory();
 });

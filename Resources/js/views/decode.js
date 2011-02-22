@@ -8,7 +8,7 @@ if (Titanium.Platform.name != 'android') {
 // label and first field
 var l1a = Titanium.UI.createLabel({
 	text:'Short url to decode*',
-	width:250,
+	width:260,
 	height:35,
 	top:90,
 	left:30,
@@ -29,17 +29,19 @@ var tf1 = Titanium.UI.createTextField({
 	height:35,
 	top:120,
 	left:130,
-	width:150,
+	width:160,
 	autocapitalization: Titanium.UI.TEXT_AUTOCAPITALIZATION_NONE,
 	returnKeyType:Titanium.UI.RETURNKEY_DEFAULT,
-	borderStyle:Titanium.UI.INPUT_BORDERSTYLE_ROUNDED
+	borderStyle:Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
+	clearButtonMode:Titanium.UI.INPUT_BUTTONMODE_ONFOCUS
 });
 
 // second label, for the result
 var l2 = Titanium.UI.createLabel({
 	text:'',
-	width:250,
+	width:260,
 	height:90,
+	left:30,
 	top:300,
 	color:'#fff',
 	textAlign:'left',
@@ -50,7 +52,7 @@ var l2 = Titanium.UI.createLabel({
 var b1 = Titanium.UI.createButton({
 	title:'Decode this short url',
 	height:30,
-	width:250,
+	width:260,
 	left:30,
 	top:200
 });
@@ -88,6 +90,13 @@ Ti.App.addEventListener('xavcc.decode.result', function(event) {
       if (Titanium.App.Properties.getBool('auto_copy', true)) {
         // put the expanded url in the clipboard
         Titanium.UI.Clipboard.setText(url);
+      }
+
+      var shorturl = Titanium.App.Properties.getString('site_url', 'http://xav.cc/') + xavcc.trim(tf1.value);
+
+      if (Titanium.App.Properties.getBool('use_history', true) && !xavcc.url.has(shorturl)) {
+        // save in the local database
+        xavcc.url.save(url, shorturl);
       }
     } else if (url.length > 0) {
       // something went wrong : display an alert message
