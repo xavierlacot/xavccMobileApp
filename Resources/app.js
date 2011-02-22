@@ -6,7 +6,7 @@ Ti.include('js/lib/install.js');
 includeGlobal('js/lib/xavcc.js');
 
 // create tab group
-var tabGroup = Titanium.UI.createTabGroup();
+var tabGroup = Titanium.UI.createTabGroup({barColor: '#273f95'});
 
 // add windows and tabs
 var win1 = Titanium.UI.createWindow({
