@@ -1,8 +1,7 @@
+// increment the number below each time you push a new model version
+// (forces rebuild on phone)
+var current_migration_version = 6;
+
 // create the tables if required
-
-// for testing purpose
-//var db = Titanium.Database.open('xavcc');
-//db.execute('DROP TABLE IF EXISTS shorturl');
-//db.close();
-
+joli.models.migrate(current_migration_version);
 joli.models.initialize();
