@@ -4,7 +4,7 @@ var xavcc = (function() {
 
   api.createClient = function() {
     var client = Titanium.Network.createHTTPClient();
-	  client.timeout = 10000;  // 10 s. timeout
+	  client.timeout = 20000;  // 20 s. timeout
     return client;
   };
 
@@ -30,6 +30,7 @@ var xavcc = (function() {
     }
 
     this.showIndicator();
+    client.setRequestHeader('User-Agent', Titanium.App.Properties.getString('api_user_agent'));
     client.send(null);
   };
 
@@ -63,6 +64,7 @@ var xavcc = (function() {
     }
 
     this.showIndicator();
+    client.setRequestHeader('User-Agent', Titanium.App.Properties.getString('api_user_agent'));
     client.send(null);
   };
 
@@ -246,6 +248,7 @@ var xavcc = (function() {
         client.open('GET', url, false);
       }
 
+      client.setRequestHeader('User-Agent', Titanium.App.Properties.getString('api_user_agent'));
       client.send(null);
     }
   };
@@ -256,7 +259,7 @@ var xavcc = (function() {
     .from('shorturl')
     .where('shorturl.shorturl = ?', shorturl)
     .execute();
-Titanium.API.log('info', 'count returns : ' + result);
+    Titanium.API.log('info', 'count returns : ' + result);
     return (result > 0);
   };
 
