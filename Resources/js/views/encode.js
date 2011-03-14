@@ -1,11 +1,6 @@
 Ti.include('../../redux.js');
 var win = Titanium.UI.currentWindow;
 
-if (Titanium.Platform.name != 'android') {
-  win.hideNavBar(); // full screen app
-}
-
-
 // label and first field
 var l1 = Titanium.UI.createLabel({
 	text:'Paste a long url*',
@@ -124,21 +119,28 @@ Ti.App.addEventListener('xavcc.encode.result', function(event) {
       // put the shortened url in the clipboard
       Titanium.UI.Clipboard.setText(url);
     }
-if (Titanium.App.Properties.getBool('use_history', true)) {
-  info('using history');
-}
-if (!xavcc.url.has(url)) {
-  info('do not have the url in memory');
-}
+
+    if (Titanium.App.Properties.getBool('use_history', true)) {
+      info('using history');
+    }
+
+    if (!xavcc.url.has(url)) {
+      Titanium.API.log('info', 'do not have the url in memory');
+    }
+
     if (Titanium.App.Properties.getBool('use_history', true) && !xavcc.url.has(url)) {
       // save in the local database
-      info('saving url ' + url);
+      Titanium.API.log('info', 'saving url ' + url);
       var longurl = xavcc.trim(tf1.value);
       xavcc.url.save(longurl, url);
     }
   } else {
     // something went wrong : display an alert message
-		alert(event.result);
+    if (event.result) {
+  		alert(event.result);
+    } else {
+      alert('Something went wrong, please check that you are connected to internet. Apologies for the inconvenience.');
+    }
 	}
 });
 

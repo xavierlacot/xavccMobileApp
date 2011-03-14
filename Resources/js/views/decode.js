@@ -1,10 +1,6 @@
 Ti.include('../../redux.js');
 var win = Titanium.UI.currentWindow;
 
-if (Titanium.Platform.name != 'android') {
-  win.hideNavBar(); // full screen app
-}
-
 // label and first field
 var l1a = Titanium.UI.createLabel({
 	text:'Short url to decode*',
