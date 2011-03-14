@@ -81,6 +81,18 @@ row5.add(l5);
 row5.add(b5);
 
 
+// add about field
+var button_about = Titanium.UI.createButton({
+	title:'about',
+	height:30,
+	width:300,
+	right:10,
+	top: 300,
+	zindex: 1
+});
+win.add(button_about);
+
+
 // table view
 var tableViewOptions1 = {
 	data: [row1,row2,row3,row4,row5],
@@ -194,6 +206,21 @@ b5.addEventListener('click', function(e) {
   dialog.addEventListener('click', function(e) {
     if (0 == e.index) {
       xavcc.url.clear();
+    }
+  });
+});
+
+button_about.addEventListener('click', function(e) {
+  var dialog = Titanium.UI.createOptionDialog({
+    title: 'This application is provided by xav.cc. Please visit our website for more informations.',
+    options: ['Visit xav.cc', 'No, thank you'],
+    cancel: 0
+  });
+  dialog.show();
+
+  dialog.addEventListener('click', function(e) {
+    if (0 == e.index) {
+      Titanium.Platform.openURL('http://xav.cc/info/about');
     }
   });
 });
