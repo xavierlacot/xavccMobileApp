@@ -5,6 +5,10 @@ Ti.include('js/lib/initialize.js');
 Ti.include('js/lib/install.js');
 includeGlobal('js/lib/xavcc.js');
 
+if (Titanium.Platform.name != 'android') {
+  Titanium.UI.iPhone.statusBarHidden = false;
+}
+
 // create tab group
 var tabGroup = Titanium.UI.createTabGroup({barColor: '#273f95'});
 
@@ -58,16 +62,6 @@ tabGroup.addTab(tab1);
 tabGroup.addTab(tab2);
 tabGroup.addTab(tab3);
 tabGroup.addTab(tab4);
-
-tabGroup.addEventListener('focus', function(e) {
-  if (Titanium.Platform.name != 'android') {
-    if (e.index < 2) {
-      Titanium.UI.iPhone.statusBarHidden = true;
-    } else {
-      Titanium.UI.iPhone.statusBarHidden = false;
-    }
-  }
-});
 
 // open tab group
 tabGroup.open();
