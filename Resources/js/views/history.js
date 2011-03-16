@@ -1,5 +1,6 @@
 Ti.include('../../redux.js');
 var win = Titanium.UI.currentWindow;
+win.backgroundImage = '../../images/background.png';
 
 // add the tableview
 var tableview = Titanium.UI.createTableView({
@@ -125,22 +126,24 @@ var loadHistory = function() {
 
     var title = Titanium.UI.createLabel({
       text: title_text,
+      color: '#000',
       font: {fontSize:15},
       width: 'auto',
       textAlign: 'left',
       top: 5,
       left: 80,
-      height: 18
+      height: 22
     });
     row.add(title);
     var urllabel = Titanium.UI.createLabel({
       text: details_text,
+      color: '#000',
       font: {fontSize:12},
       width: 'auto',
       textAlign: 'left',
       top: 30,
       left: 80,
-      height: 14
+      height: 18
     });
     row.add(urllabel);
 /*
@@ -178,6 +181,10 @@ var loadHistory = function() {
 };
 
 win.addEventListener('focus',function(e) {
+  loadHistory();
+});
+
+win.tabGroup.addEventListener('focus',function(e) {
   loadHistory();
 });
 

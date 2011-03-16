@@ -1,5 +1,6 @@
 Ti.include('../../redux.js');
 var win = Titanium.UI.currentWindow;
+win.backgroundImage = '../../images/background.png';
 
 // history
 var row1 = Ti.UI.createTableViewRow({height:45});
@@ -56,8 +57,8 @@ var l4 = Ti.UI.createLabel({
 });
 var b4 = Titanium.UI.createButton({
 	title:Titanium.App.Properties.getString('site_name'),
-	height:30,
-	width:95,
+	height:40,
+	width:58,
 	right:10
 });
 row4.add(l4);
@@ -73,8 +74,8 @@ var l5 = Ti.UI.createLabel({
 });
 var b5 = Titanium.UI.createButton({
 	title:'clear',
-	height:30,
-	width:95,
+	height:40,
+	width:58,
 	right:10
 });
 row5.add(l5);
@@ -84,13 +85,11 @@ row5.add(b5);
 // add about field
 var button_about = Titanium.UI.createButton({
 	title:'about',
-	height:30,
+	height:40,
 	width:300,
 	right:10,
-	top: 300,
-	zindex: 1
+	top: 300
 });
-win.add(button_about);
 
 
 // table view
@@ -129,7 +128,7 @@ if (Titanium.Platform.name != 'android') {
   	bottom:-251
   });
   var picker = Titanium.UI.createPicker({
-  		top:43
+  	top:43
   });
   picker.selectionIndicator = true;
   var shorteners = [
@@ -143,11 +142,16 @@ if (Titanium.Platform.name != 'android') {
   var slide_in = Titanium.UI.createAnimation({bottom:0});
   var slide_out = Titanium.UI.createAnimation({bottom:-251});
   var show_picker = function() {
+    button_about.hide();
   	picker_view.animate(slide_in);
+  };
+  var hide_picker = function() {
+    button_about.show();
+  	picker_view.animate(slide_out);
   };
   b4.addEventListener('click', show_picker);
   cancel.addEventListener('click', function() {
-  	picker_view.animate(slide_out);
+  	hide_picker();
   });
   done.addEventListener('click', function() {
     var url = picker.getSelectedRow(0).title;
@@ -155,7 +159,7 @@ if (Titanium.Platform.name != 'android') {
   	Titanium.App.Properties.setString('site_url', 'http://' + url + '/');
   	b4.title = url;
     Ti.App.fireEvent('xavcc.change_site_url', { title: 'http://' + url + '/' });
-  	picker_view.animate(slide_out);
+  	hide_picker();
   });
 } else {
   // on android, use an option dialog
@@ -183,6 +187,8 @@ if (Titanium.Platform.name != 'android') {
     });
   });
 }
+
+win.add(button_about);
 
 // add event listeners
 sw1.addEventListener('change', function(e) {

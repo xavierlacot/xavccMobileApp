@@ -5,7 +5,7 @@
 <version>2.0.0</version>
 <publisher>xav.cc</publisher>
 <url>http://xav.cc/</url>
-<description>a mobile client for the url shortener xav.cc</description>
+<description>A mobile client for the url shortener xav.cc</description>
 <copyright>2011 by xav.cc</copyright>
 <icon>default_app_logo.png</icon>
     <persistent-wifi>false</persistent-wifi>

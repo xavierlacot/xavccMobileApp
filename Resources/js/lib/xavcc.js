@@ -9,6 +9,20 @@ var xavcc = (function() {
   };
 
   api.decode = function(alias) {
+    // first, search in the local history if enabled
+    var result = new joli.query()
+      .select()
+      .from('shorturl')
+      .where('shorturl LIKE ?', '%/' + alias)
+      .limit(1)
+      .execute();
+
+    if (result.length != 0) {
+      log('found in history');
+      Ti.App.fireEvent('xavcc.decode.result', { result: result[0].longurl });
+      return;
+    }
+
   	var escapedUrl = api.encodeUrl(alias);
     var url = Titanium.App.Properties.getString('api_url', 'http://api.xav.cc/');
     url = url + 'simple/decode?alias=' + escapedUrl;
@@ -34,9 +48,26 @@ var xavcc = (function() {
     client.send(null);
   };
 
-
   api.encode = function(longurl, alias) {
     // first, search in the local history if enabled
+    var query = new joli.query()
+      .select()
+      .from('shorturl')
+      .where('longurl = ?', longurl)
+      .limit(1);
+
+    if ('' != alias)
+    {
+      query.where('shorturl LIKE ?', '%/' + alias);
+    }
+
+    var result = query.execute();
+
+    if (result.length != 0) {
+      log('found in history');
+      Ti.App.fireEvent('xavcc.encode.result', { result: result[0].shorturl });
+      return;
+    }
 
     // else shorten the value
   	var escapedUrl = api.encodeUrl(longurl);
@@ -133,17 +164,36 @@ var xavcc = (function() {
   };
 
 
-  api.showResponse = function(label, shorturl) {
-    var length = Math.max(8, Math.min(30, shorturl.length));
-    var size = Math.ceil(12 + (30 - length) * (15 / 10));
+  api.showResponse = function(label, response) {
+    var length = Math.max(8, Math.min(30, response.length));
+    log('length: ' + length);
+    var size = Math.ceil(15 + (30 - length) * (13 / 10));
+    log('size: ' + size);
     label.font = {'fontSize':size};
-    label.text = shorturl;
+    label.text = response;
   };
 
 
-  api.strpos = function (haystack, needle) {
+  api.strpos = function(haystack, needle) {
     var i = (haystack + '').indexOf(needle, 0);
     return i === -1 ? false : i;
+  };
+
+
+  api.strrpos = function(haystack, needle, offset) {
+    var i = -1;
+
+    if (offset) {
+      i = (haystack + '').slice(offset).lastIndexOf(needle);
+
+      if (i !== -1) {
+        i += offset;
+      }
+    } else {
+      i = (haystack + '').lastIndexOf(needle);
+    }
+
+    return i >= 0 ? i : false;
   };
 
 
@@ -255,11 +305,10 @@ var xavcc = (function() {
 
   api.url.has = function(shorturl) {
     var result = new joli.query()
-    .count()
-    .from('shorturl')
-    .where('shorturl.shorturl = ?', shorturl)
-    .execute();
-    Titanium.API.log('info', 'count returns : ' + result);
+      .count()
+      .from('shorturl')
+      .where('shorturl.shorturl LIKE ?', '%/' + shorturl)
+      .execute();
     return (result > 0);
   };
 

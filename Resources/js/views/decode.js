@@ -1,5 +1,6 @@
 Ti.include('../../redux.js');
 var win = Titanium.UI.currentWindow;
+win.backgroundImage = '../../images/background.png';
 
 // label and first field
 var l1a = Titanium.UI.createLabel({
@@ -13,6 +14,7 @@ var l1a = Titanium.UI.createLabel({
 });
 var l1b = Titanium.UI.createLabel({
 	text:Titanium.App.Properties.getString('site_url', 'http://xav.cc/'),
+	font: {fontSize:15},
 	width:100,
 	height:35,
 	top:120,
@@ -22,7 +24,7 @@ var l1b = Titanium.UI.createLabel({
 });
 var tf1 = Titanium.UI.createTextField({
 	color:'#192578',
-	height:35,
+	height:40,
 	top:120,
 	left:130,
 	width:160,
@@ -36,9 +38,9 @@ var tf1 = Titanium.UI.createTextField({
 var l2 = Titanium.UI.createLabel({
 	text:'',
 	width:260,
-	height:90,
+	height:'auto',
 	left:30,
-	top:300,
+	top:280,
 	color:'#fff',
 	textAlign:'left',
 	font:{'fontSize':17}
@@ -47,7 +49,7 @@ var l2 = Titanium.UI.createLabel({
 // submit button
 var b1 = Titanium.UI.createButton({
 	title:'Decode this short url',
-	height:30,
+	height:40,
 	width:260,
 	left:30,
 	top:200
@@ -58,8 +60,7 @@ var doDecode = function() {
   var alias = xavcc.trim(tf1.value);
 
   if (!alias) {
-    alert('Please write an alias!');
-    tf1.focus();
+    tf1.blur();
     return;
   }
 
@@ -88,10 +89,12 @@ Ti.App.addEventListener('xavcc.decode.result', function(event) {
         Titanium.UI.Clipboard.setText(url);
       }
 
-      var shorturl = Titanium.App.Properties.getString('site_url', 'http://xav.cc/') + xavcc.trim(tf1.value);
+      var alias = xavcc.trim(tf1.value);
+      var shorturl = Titanium.App.Properties.getString('site_url', 'http://xav.cc/') + alias;
 
-      if (Titanium.App.Properties.getBool('use_history', true) && !xavcc.url.has(shorturl)) {
+      if (Titanium.App.Properties.getBool('use_history', true) && !xavcc.url.has(alias)) {
         // save in the local database
+        Titanium.API.log('info', 'saving url ' + url);
         xavcc.url.save(url, shorturl);
       }
     } else if (url.length > 0) {

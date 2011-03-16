@@ -12,6 +12,14 @@ if (Titanium.Platform.name != 'android') {
 // create tab group
 var tabGroup = Titanium.UI.createTabGroup({barColor: '#273f95'});
 
+if (Titanium.Platform.name == 'android') {
+  tabGroup.softKeyboardOnFocus = Titanium.UI.Android.SOFT_KEYBOARD_HIDE_ON_FOCUS;
+
+  tabGroup.addEventListener('focus', function(e) {
+	  Ti.UI.Android.hideSoftKeyboard();
+  });
+}
+
 // add windows and tabs
 var win1 = Titanium.UI.createWindow({
     url:'js/views/encode.js',

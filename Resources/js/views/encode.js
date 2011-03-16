@@ -1,5 +1,6 @@
 Ti.include('../../redux.js');
 var win = Titanium.UI.currentWindow;
+win.backgroundImage = '../../images/background.png';
 
 // label and first field
 var l1 = Titanium.UI.createLabel({
@@ -14,7 +15,7 @@ var l1 = Titanium.UI.createLabel({
 var tf1 = Titanium.UI.createTextField({
 	hintText:'type or paste here a valid url',
 	color:'#192578',
-	height:35,
+	height:40,
 	top:70,
 	left:30,
 	width:260,
@@ -26,7 +27,7 @@ var tf1 = Titanium.UI.createTextField({
 });
 if (Titanium.UI.Clipboard.hasText() && Titanium.App.Properties.getBool('auto_paste', false)) {
   var text = Titanium.UI.Clipboard.getText();
-  if (text.indexOf('http') == 0) {
+  if ((text.indexOf('http') == 0) && (text.indexOf('http://xav.cc/') != 0) && (text.indexOf('http://xa.vc/') != 0)) {
     tf1.value = text;
   }
 }
@@ -45,7 +46,7 @@ var l2b = Titanium.UI.createLabel({
 	text:Titanium.App.Properties.getString('site_url', 'http://xav.cc/'),
 	font: {fontSize:15},
 	width:120,
-	height:35,
+	height:40,
 	top:150,
 	left:30,
 	color:'#fff',
@@ -54,7 +55,7 @@ var l2b = Titanium.UI.createLabel({
 var tf2 = Titanium.UI.createTextField({
 	hintText:'(optional)',
 	color:'#192578',
-	height:35,
+	height:40,
 	top:150,
 	left:130,
 	width:160,
@@ -77,7 +78,7 @@ var l3 = Titanium.UI.createLabel({
 // submit button
 var b1 = Titanium.UI.createButton({
 	title:'Shorten this url',
-	height:30,
+	height:40,
 	width:260,
 	left:30,
 	top:220
@@ -89,8 +90,7 @@ var doShorten = function() {
   var alias = xavcc.trim(tf2.value);
 
   if (!longurl) {
-    alert('Please type in a url');
-    tf1.focus();
+    tf1.blur();
     return;
   }
 
@@ -112,7 +112,8 @@ Ti.App.addEventListener('xavcc.encode.result', function(event) {
   xavcc.hideIndicator();
 
   if (event.result && event.result.indexOf('http://') == 0) {
-    var url = Titanium.App.Properties.getString('site_url', 'http://xav.cc/') + event.result.slice(14);
+    var alias = event.result.slice(xavcc.strrpos(event.result, '/', 7) + 1);
+    var url = Titanium.App.Properties.getString('site_url', 'http://xav.cc/') + alias;
     xavcc.showResponse(l3, url);
 
     if (Titanium.App.Properties.getBool('auto_copy', true)) {
@@ -120,15 +121,7 @@ Ti.App.addEventListener('xavcc.encode.result', function(event) {
       Titanium.UI.Clipboard.setText(url);
     }
 
-    if (Titanium.App.Properties.getBool('use_history', true)) {
-      info('using history');
-    }
-
-    if (!xavcc.url.has(url)) {
-      Titanium.API.log('info', 'do not have the url in memory');
-    }
-
-    if (Titanium.App.Properties.getBool('use_history', true) && !xavcc.url.has(url)) {
+    if (Titanium.App.Properties.getBool('use_history', true) && !xavcc.url.has(alias)) {
       // save in the local database
       Titanium.API.log('info', 'saving url ' + url);
       var longurl = xavcc.trim(tf1.value);

@@ -5,168 +5,105 @@ var win = Titanium.UI.currentWindow;
 var shorturl = models.shorturl.findOneBy('id', win.shorturlId);
 xavcc.url.details(shorturl.shorturl);
 
-var scrollView = Titanium.UI.createScrollView({
-  contentWidth:320,
-  contentHeight:'auto',
-  top:0,
-  left:0,
-  showVerticalScrollIndicator:true,
-  showHorizontalScrollIndicator:false
+
+var tableview = Titanium.UI.createTableView({
+  backgroundColor: 'transparent',
+  minRowHeight:50,
+  separatorColor: 'transparent'
 });
-var mediaHeigh;
+var row = Ti.UI.createTableViewRow({
+  height:'auto',
+  className:'row'
+});
+var view = Ti.UI.createView({
+	height:'auto',
+	width:'auto',
+	layout:'vertical',
+	left:0,
+	top:10,
+	bottom:10
+});
 
 if (shorturl.media) {
   var image = Titanium.UI.createImageView({
   	image:shorturl.media.replace(/\/small\//gi, '/large/'),
   	width:300,
+   	left: 10,
   	height:225,
-  	top:10,
-  	left: 10,
   	canScale: true
   });
-  scrollView.add(image);
-  mediaHeight = 225;
-} else {
-  mediaHeight = 0;
+  view.add(image);
 }
 
 // labels
-if (Titanium.Platform.name != 'android') {
-  var labelTitle = Titanium.UI.createLabel({
-  	text: xavcc.trim(shorturl.title),
-  	width:300,
-  	height: 'auto',
-  	top:25 + mediaHeight,
-  	left: 10,
-  	color:'#fff',
-  	textAlign:'left',
-  	font:{'fontSize':20, fontWeight:'bold'}
-  });
-  scrollView.add(labelTitle);
-  var labelDescription = Titanium.UI.createLabel({
-  	text: xavcc.trim(shorturl.description),
-  	width:300,
-  	height: 'auto',
-  	top:35 + mediaHeight + labelTitle.height,
-  	left: 10,
-  	color:'#fff',
-  	textAlign:'left',
-  	font:{'fontSize':13}
-  });
-  scrollView.add(labelDescription);
+var labelTitle = Titanium.UI.createLabel({
+	text: xavcc.trim(shorturl.title),
+	width:300,
+	left:10,
+	top: 15,
+	height: 'auto',
+	color:'#fff',
+	textAlign:'left',
+	font:{'fontSize':20, fontWeight:'bold'}
+});
+view.add(labelTitle);
+var labelDescription = Titanium.UI.createLabel({
+	text: xavcc.trim(shorturl.description),
+	width:300,
+	left:10,
+	top: 10,
+	height: 'auto',
+	color:'#fff',
+	textAlign:'left',
+	font:{'fontSize':13}
+});
+view.add(labelDescription);
 
-  var labelShorturl = Titanium.UI.createLabel({
-  	text: 'Short url',
-  	width:300,
-  	height: 'auto',
-  	top:65 + mediaHeight + labelTitle.height + labelDescription.height,
-  	left: 10,
-  	color:'#fff',
-  	textAlign:'left',
-  	font:{fontSize:13, fontWeight:'bold'}
-  });
-  scrollView.add(labelShorturl);
-  var labelShorturlValue = Titanium.UI.createLabel({
-  	text: shorturl.shorturl,
-  	width:300,
-  	height: 'auto',
-  	top:80 + mediaHeight + labelTitle.height + labelDescription.height,
-  	left: 10,
-  	color:'#fff',
-  	textAlign:'left',
-  	font:{'fontSize':13}
-  });
-  scrollView.add(labelShorturlValue);
+var labelShorturl = Titanium.UI.createLabel({
+	text: 'Short url',
+	width:300,
+	left:10,
+	top: 20,
+	height: 'auto',
+	color:'#fff',
+	textAlign:'left',
+	font:{fontSize:13, fontWeight:'bold'}
+});
+view.add(labelShorturl);
+var labelShorturlValue = Titanium.UI.createLabel({
+	text: shorturl.shorturl,
+	width:300,
+	left:10,
+	top: 3,
+	height: 'auto',
+	color:'#fff',
+	textAlign:'left',
+	font:{'fontSize':13}
+});
+view.add(labelShorturlValue);
 
-  var labelLongurl = Titanium.UI.createLabel({
-  	text:'Original url',
-  	width:300,
-  	height: 'auto',
-  	top:95 + mediaHeight + labelTitle.height + labelDescription.height + labelShorturl.height,
-  	left: 10,
-  	color:'#fff',
-  	textAlign:'left',
-  	font:{'fontSize':13, fontWeight:'bold'}
-  });
-  scrollView.add(labelLongurl);
-  var labelLongurlValue = Titanium.UI.createLabel({
-  	text: xavcc.trim(shorturl.longurl),
-  	width:300,
-  	height: 'auto',
-  	top:110 + mediaHeight + labelTitle.height + labelDescription.height + labelShorturl.height,
-  	left: 10,
-  	color:'#fff',
-  	textAlign:'left',
-  	font:{'fontSize':13}
-  });
-  scrollView.add(labelLongurlValue);
-} else {
-  // android, add labels first, then set their height and top
-
-  var labelTitle = Titanium.UI.createLabel({
-  	text: xavcc.trim(shorturl.title),
-  	width:300,
-  	top:25 + mediaHeight,
-  	left: 10,
-  	color:'#fff',
-  	textAlign:'left',
-  	font:{'fontSize':20, fontWeight:'bold'}
-  });
-  scrollView.add(labelTitle);
-  var labelDescription = Titanium.UI.createLabel({
-  	text: xavcc.trim(shorturl.description),
-  	width:300,
-  	top:35 + mediaHeight + labelTitle.height,
-  	left: 10,
-  	color:'#fff',
-  	textAlign:'left',
-  	font:{'fontSize':13}
-  });
-  scrollView.add(labelDescription);
-
-  var labelShorturl = Titanium.UI.createLabel({
-  	text: 'Short url',
-  	width:300,
-  	top:65 + mediaHeight + labelTitle.height + labelDescription.height,
-  	left: 10,
-  	color:'#fff',
-  	textAlign:'left',
-  	font:{fontSize:13, fontWeight:'bold'}
-  });
-  scrollView.add(labelShorturl);
-  var labelShorturlValue = Titanium.UI.createLabel({
-  	text: shorturl.shorturl,
-  	width:300,
-  	top:80 + mediaHeight + labelTitle.height + labelDescription.height,
-  	left: 10,
-  	color:'#fff',
-  	textAlign:'left',
-  	font:{'fontSize':13}
-  });
-  scrollView.add(labelShorturlValue);
-
-  var labelLongurl = Titanium.UI.createLabel({
-  	text:'Original url',
-  	width:300,
-  	top:95 + mediaHeight + labelTitle.height + labelDescription.height + labelShorturl.height,
-  	left: 10,
-  	color:'#fff',
-  	textAlign:'left',
-  	font:{'fontSize':13, fontWeight:'bold'}
-  });
-  scrollView.add(labelLongurl);
-  var labelLongurlValue = Titanium.UI.createLabel({
-  	text: xavcc.trim(shorturl.longurl),
-  	width:300,
-  	top:110 + mediaHeight + labelTitle.height + labelDescription.height + labelShorturl.height,
-  	left: 10,
-  	color:'#fff',
-  	textAlign:'left',
-  	font:{'fontSize':13}
-  });
-  scrollView.add(labelLongurlValue);
-}
-
+var labelLongurl = Titanium.UI.createLabel({
+	text:'Original url',
+	width:300,
+	left:10,
+	top: 20,
+	height: 'auto',
+	color:'#fff',
+	textAlign:'left',
+	font:{'fontSize':13, fontWeight:'bold'}
+});
+view.add(labelLongurl);
+var labelLongurlValue = Titanium.UI.createLabel({
+	text: xavcc.trim(shorturl.longurl),
+	width:300,
+	left:10,
+	top: 3,
+	height: 'auto',
+	color:'#fff',
+	textAlign:'left',
+	font:{'fontSize':13}
+});
+view.add(labelLongurlValue);
 
 // actions button
 var actionButton = Titanium.UI.createButton();
@@ -202,7 +139,12 @@ if (Titanium.Platform.name != 'android') {
   actionButton.title = 'more';
   actionButton.top = 10;
   actionButton.right = 10;
-  scrollView.add(actionButton);
+  view.add(actionButton);
 }
 
-win.add(scrollView);
+// display the view
+row.add(view);
+var data = [];
+data.push(row);
+tableview.setData(data);
+win.add(tableview);
