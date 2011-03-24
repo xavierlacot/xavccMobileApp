@@ -18,7 +18,7 @@ var xavcc = (function() {
       .execute();
 
     if (result.length != 0) {
-      log('found in history');
+      Titanium.API.log('debug', 'found in history');
       Ti.App.fireEvent('xavcc.decode.result', { result: result[0].longurl });
       return;
     }
@@ -26,7 +26,7 @@ var xavcc = (function() {
   	var escapedUrl = api.encodeUrl(alias);
     var url = Titanium.App.Properties.getString('api_url', 'http://api.xav.cc/');
     url = url + 'simple/decode?alias=' + escapedUrl;
-    log('decode using: ' + url);
+    Titanium.API.log('debug', 'decode using: ' + url);
 
     // create http client
     var client = api.createClient();
@@ -64,7 +64,7 @@ var xavcc = (function() {
     var result = query.execute();
 
     if (result.length != 0) {
-      log('found in history');
+      Titanium.API.log('debug', 'found in history');
       Ti.App.fireEvent('xavcc.encode.result', { result: result[0].shorturl });
       return;
     }
@@ -73,7 +73,7 @@ var xavcc = (function() {
   	var escapedUrl = api.encodeUrl(longurl);
     var url = Titanium.App.Properties.getString('api_url', 'http://api.xav.cc/');
     url = url + 'simple/encode?url=' + escapedUrl;
-    log('encode using: ' + url);
+    Titanium.API.log('debug', 'encode using: ' + url);
 
     if (alias) {
       url = url + '&alias=' + api.encodeUrl(alias);
@@ -166,9 +166,7 @@ var xavcc = (function() {
 
   api.showResponse = function(label, response) {
     var length = Math.max(8, Math.min(30, response.length));
-    log('length: ' + length);
     var size = Math.ceil(15 + (30 - length) * (13 / 10));
-    log('size: ' + size);
     label.font = {'fontSize':size};
     label.text = response;
   };

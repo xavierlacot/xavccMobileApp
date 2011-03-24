@@ -1,9 +1,8 @@
-Ti.include('redux.js');
-includeGlobal('js/lib/vendor/joli.js/joli.js');
-includeGlobal('js/lib/model/models.js');
+Ti.include('js/lib/vendor/joli.js/joli.js');
+Ti.include('js/lib/model/models.js');
 Ti.include('js/lib/initialize.js');
 Ti.include('js/lib/install.js');
-includeGlobal('js/lib/xavcc.js');
+Ti.include('js/lib/xavcc.js');
 
 if (Titanium.Platform.name != 'android') {
   Titanium.UI.iPhone.statusBarHidden = false;

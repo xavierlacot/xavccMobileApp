@@ -1,10 +1,13 @@
-Ti.include('../../redux.js');
+Ti.include('../lib/vendor/joli.js/joli.js');
+Ti.include('../lib/model/models.js');
+Ti.include('../lib/xavcc.js');
+
 var win = Titanium.UI.currentWindow;
 win.backgroundImage = '../../images/background.png';
 
 // add the tableview
 var tableview = Titanium.UI.createTableView({
-	editable:true, moveable:true
+	editable:true, moveable:true, backgroundColor: '#fff'
 });
 
 // display short url screen
