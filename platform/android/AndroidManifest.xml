@@ -1,0 +1,35 @@
+<?xml version="1.0" ?><manifest android:versionCode="3" android:versionName="2.1" package="com.xavierlacot.xavcc" xmlns:android="http://schemas.android.com/apk/res/android">
+	<uses-sdk android:minSdkVersion="4"/>
+	<supports-screens android:anyDensity="false" android:largeScreens="true" android:normalScreens="true" android:smallScreens="false"/>
+
+	<activity android:label="xavccMobileApp" android:name=".xavccMobileActivity" android:screenOrientation="portrait"/>
+
+
+	<application android:debuggable="true" android:icon="@drawable/appicon" android:label="xavccMobileApp" android:name="XavccmobileappApplication">
+    	<activity android:configChanges="keyboardHidden|orientation" android:label="xavccMobileApp" android:name=".XavccmobileappActivity" android:theme="@style/Theme.Titanium">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+		<!-- TI_APPLICATION -->
+
+		<activity android:configChanges="keyboardHidden|orientation" android:name="org.appcelerator.titanium.TiActivity"/>
+		<activity android:configChanges="keyboardHidden|orientation" android:name="org.appcelerator.titanium.TiModalActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"/>
+		<activity android:configChanges="keyboardHidden|orientation" android:name="ti.modules.titanium.ui.TiTabActivity"/>
+		<activity android:configChanges="keyboardHidden|orientation" android:name="ti.modules.titanium.media.TiVideoActivity" android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
+		<activity android:name="ti.modules.titanium.ui.android.TiPreferencesActivity"/>
+
+		<service android:exported="false" android:name="org.appcelerator.titanium.analytics.TiAnalyticsService"/>
+
+
+	</application>
+
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+	<uses-permission android:name="android.permission.INTERNET"/>
+
+
+</manifest>
