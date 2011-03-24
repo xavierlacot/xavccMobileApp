@@ -111,13 +111,20 @@ view.add(labelLongurlValue);
 // actions button
 var actionButton = Titanium.UI.createButton();
 actionButton.addEventListener('click', function() {
+  var options = [];
+
+  if (Titanium.Platform.name == 'android') {
+    options.push('Show this page in the browser');
+  } else {
+    options.push('Show this page in Safari');
+  }
+
+  options.push('Copy the short url');
+  options.push('Copy the long url');
+  options.push('Cancel');
+
   var dialog = Titanium.UI.createOptionDialog({
-    options: [
-      'Show this page in Safari',
-      'Copy the short url',
-      'Copy the long url',
-      'Cancel'
-    ],
+    options: options,
     cancel: 3
   });
   dialog.show();
