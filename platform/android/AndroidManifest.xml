@@ -1,11 +1,11 @@
-<?xml version="1.0" ?><manifest android:versionCode="4" android:versionName="2.2" package="com.xavierlacot.xavcc" xmlns:android="http://schemas.android.com/apk/res/android">
+<?xml version="1.0" ?><manifest android:versionCode="5" android:versionName="2.2.1" package="com.xavierlacot.xavcc" xmlns:android="http://schemas.android.com/apk/res/android">
 	<uses-sdk android:minSdkVersion="4"/>
 	<supports-screens android:anyDensity="false" android:largeScreens="true" android:normalScreens="true" android:smallScreens="false"/>
 
 	<activity android:label="xavccMobileApp" android:name=".xavccMobileActivity" android:screenOrientation="portrait"/>
 
 
-	<application android:debuggable="true" android:icon="@drawable/appicon" android:label="xavccMobileApp" android:name="XavccmobileappApplication">
+	<application android:debuggable="false" android:icon="@drawable/appicon" android:label="URL Shortener xav.cc" android:name="XavccmobileappApplication">
     	<activity android:configChanges="keyboardHidden|orientation" android:label="xavccMobileApp" android:name=".XavccmobileappActivity" android:theme="@style/Theme.Titanium">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

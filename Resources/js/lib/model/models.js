@@ -1,3 +1,5 @@
+Ti.include('../vendor/joli/joli.js');
+
 // open database
 joli.connection = new joli.Connection('xavcc');
 

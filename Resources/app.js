@@ -1,4 +1,4 @@
-Ti.include('js/lib/vendor/joli.js/joli.js');
+Ti.include('js/lib/vendor/joli/joli.js');
 Ti.include('js/lib/model/models.js');
 Ti.include('js/lib/initialize.js');
 Ti.include('js/lib/install.js');
